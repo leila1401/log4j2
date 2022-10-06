@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error">
+	<Properties>
+		<Property name="filename">./logs</Property>
+	</Properties>
+	<Appenders>
+		<Routing name="Routing">
+			<Routes>
+				<Script name="RoutingIn" language="JavaScript"><![CDATA[
+								if(logEvent.getMarker() != null && logEvent.getMarker().isInstanceOf("Leila")){
+								return "File_l";
+								}else{
+								return "file_T";
+								}
+								]]>
+
+				</Script>
+
+
+				<Route>
+					<RollingFile name="File_l"
+						fileName="${filename}/log_l.log"
+						filePattern="${filename}/log_l.log">
+						<PatternLayout>
+							<Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+							</Pattern>
+						</PatternLayout>
+						<SizeBasedTriggeringPolicy size="2KB" />
+
+					</RollingFile>
+
+
+					<RollingFile name="File_T"
+						fileName="${filename}/log_T.log"
+						filePattern="${filename}/log_T.log">
+						<PatternLayout>
+							<Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
+							</Pattern>
+						</PatternLayout>
+						<SizeBasedTriggeringPolicy size="2KB" />
+
+					</RollingFile>
+				</Route>
+				<Route ref ="file_l" key = "file_l"/>
+
+			</Routes>
+
+
+		</Routing>
+
+	</Appenders>
+
+	<Loggers>
+	<Logger  name = "com.sts.demo" level="info" additivity="false">
+	<AppenderRef ref = "file_l" />
+	<AppenderRef ref = "file_T" />
+	</Logger>
+		<Root level="info">
+			<AppenderRef ref="file_l" />
+			<AppenderRef ref="file_T" />
+		</Root>
+		
+
+	</Loggers>
+
+</Configuration>
